@@ -36,6 +36,9 @@ theme:
         icon: material/brightness-4
         name: ライトモードへ切り替え
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search:
       lang:
