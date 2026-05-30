@@ -12,14 +12,16 @@ on:
 permissions:
   contents: write
 
-# デプロイの同時実行を抑止する (新しい実行が走ったら進行中の古い実行はキャンセル)
+# デプロイの同時実行を抑止する。進行中のデプロイは中断せず順番に流しきる
+# (gh-pages への push を途中でキャンセルすると中途半端な状態になりうるため false)
 concurrency:
   group: deploy-mkdocs
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       # 最終更新日プラグイン等で git 履歴が必要になっても困らないよう全履歴を取得
       - name: Checkout

@@ -1,0 +1,42 @@
+name: Build check
+
+# develop / production への PR でビルドを検証し、リンク切れや設定ミスをマージ前に検出する
+on:
+  pull_request:
+    branches:
+      - develop
+      - production
+
+# ビルドのみなので read 権限で十分
+permissions:
+  contents: read
+
+# 同一 PR への連続 push では古い検証をキャンセルしてよい (デプロイと違い安全)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # git-revision-date 系プラグインが履歴を要求しても困らないよう全履歴を取得
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # 公式 astral-sh/setup-uv で uv をセットアップ。マイナータグ未発行のため固定タグで pin する。
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+
+      # uv.lock どおりに依存をインストール
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # --strict で警告 (リンク切れ・無効なナビ項目等) をエラーに昇格させ、ビルドを失敗させる
+      - name: Build (strict)
+        run: uv run --frozen mkdocs build --strict
