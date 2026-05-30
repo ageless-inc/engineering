@@ -18,16 +18,18 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # ランナー世代の自動切替によるビルド差異を避けるためメジャー版を固定 (latest は 24.04 を指す)
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      # 履歴を使うプラグインは未導入で、--strict のビルド検証に全履歴は不要なため浅いクローンで十分
+      # 履歴を使うプラグインは未導入で、--strict のビルド検証に全履歴は不要なため浅いクローンで十分。
+      # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
-      # 公式 astral-sh/setup-uv で uv をセットアップ。マイナータグ未発行のため固定タグで pin する。
+      # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
           enable-cache: true
 

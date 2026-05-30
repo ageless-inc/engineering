@@ -20,19 +20,21 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # ランナー世代の自動切替によるビルド差異を避けるためメジャー版を固定 (latest は 24.04 を指す)
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       # git 履歴を使うプラグイン (最終更新日表示等) は未導入のため浅いクローンで十分。
       # 公開物を生成するのはこの deploy 側なので、将来そうしたプラグインを導入する
       # 場合は (CI ではなく) ここに fetch-depth: 0 を追加すること。
+      # このジョブは contents: write を持ち gh-pages を改ざんできるため、以降の Action は特に
+      # サプライチェーン保護を重視して SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
-      # 公式 astral-sh/setup-uv で uv をセットアップ。
-      # このアクションはマイナータグ (@v8) を発行していないため固定タグで pin する。
+      # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
           enable-cache: true
 
