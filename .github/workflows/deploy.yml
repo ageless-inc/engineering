@@ -23,11 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # 最終更新日プラグイン等で git 履歴が必要になっても困らないよう全履歴を取得
+      # git 履歴を使うプラグイン (最終更新日表示等) は未導入のため浅いクローンで十分。
+      # 将来そうしたプラグインを導入する場合は fetch-depth: 0 を追加すること。
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       # 公式 astral-sh/setup-uv で uv をセットアップ。
       # このアクションはマイナータグ (@v8) を発行していないため固定タグで pin する。
