@@ -48,6 +48,15 @@ plugins:
       # separator に \u200b を含めて検索インデックスを分割する (Material 公式の日本語推奨)
       separator: '[\s\u200b\-]'
 
+  # 各ページ下部に git 履歴から算出した「最終更新日」を表示する (生きたドキュメントの信頼性向上)。
+  # 正確な日付には全履歴が必要なため CI/deploy 双方の checkout に fetch-depth: 0 を設定している。
+  # git 履歴を持たないファイル (新規・未コミット) はビルド日にフォールバックし、--strict でも失敗させない。
+  - git-revision-date-localized:
+      type: date
+      locale: ja
+      enable_creation_date: true
+      fallback_to_build_date: true
+
 markdown_extensions:
   - admonition
   - toc:

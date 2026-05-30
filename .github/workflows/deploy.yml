@@ -29,11 +29,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      # 履歴を使うプラグイン (最終更新日表示等) は未導入のため浅いクローンで十分。
-      # 将来そうしたプラグインを導入する場合は (CI 側と合わせて) fetch-depth: 0 を追加すること。
+      # git-revision-date-localized が最終更新日を正確に算出するには全履歴が必要なため
+      # fetch-depth: 0 でフルクローンする (公開物を生成するのはこの deploy 側)。
       # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 0
 
       # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
