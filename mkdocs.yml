@@ -63,3 +63,4 @@ extra_css:
 
 extra_javascript:
   - javascripts/header-title-link.js
+  - javascripts/sidebar-repo-link.js
