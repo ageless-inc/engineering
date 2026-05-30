@@ -1,0 +1,8 @@
+[project]
+name = "ageless-engineering"
+version = "0.1.0"
+description = "MkDocs Material で構築するエンジニアリングドキュメントサイト"
+requires-python = ">=3.12"
+dependencies = [
+    "mkdocs-material==9.7.6",
+]
