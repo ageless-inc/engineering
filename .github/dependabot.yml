@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Python 依存 (pyproject.toml + uv.lock) を毎週チェックして更新 PR を作成
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+
+  # GitHub Actions のバージョンを毎週チェックして更新 PR を作成
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
