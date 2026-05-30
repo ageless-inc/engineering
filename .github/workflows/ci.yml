@@ -21,11 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # git-revision-date 系プラグインが履歴を要求しても困らないよう全履歴を取得
+      # 履歴を使うプラグインは未導入で、--strict のビルド検証に全履歴は不要なため浅いクローンで十分
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       # 公式 astral-sh/setup-uv で uv をセットアップ。マイナータグ未発行のため固定タグで pin する。
       - name: Set up uv

@@ -24,7 +24,8 @@ jobs:
     timeout-minutes: 10
     steps:
       # git 履歴を使うプラグイン (最終更新日表示等) は未導入のため浅いクローンで十分。
-      # 将来そうしたプラグインを導入する場合は fetch-depth: 0 を追加すること。
+      # 公開物を生成するのはこの deploy 側なので、将来そうしたプラグインを導入する
+      # 場合は (CI ではなく) ここに fetch-depth: 0 を追加すること。
       - name: Checkout
         uses: actions/checkout@v6
 
@@ -39,6 +40,8 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
-      # ビルドと gh-pages への デプロイを一括実行
+      # ビルドと gh-pages への デプロイを一括実行。
+      # production への直 push は PR の CI を経由しないため、ここでも --strict で
+      # リンク切れ・設定ミスを検証し、不正な内容を本番公開しないようにする。
       - name: Build and deploy to GitHub Pages
-        run: uv run --frozen mkdocs gh-deploy --force
+        run: uv run --frozen mkdocs gh-deploy --force --strict
