@@ -1,0 +1,20 @@
+# prh (Proofreading Helper) 辞書
+#
+# textlint の責務を「シンプルな誤字脱字・表記ゆれチェック」に限定するための辞書。
+# 文体 (である/ですます) や助詞・全角記号などの『スタイル』は強制しない。
+#
+# 使い方: 誤りに気付いたら rules に1件ずつ追記する。
+#   - expected: 正しい表記
+#     pattern:  検出したい誤り (文字列。/.../ で正規表現も可)
+# 詳細: https://github.com/prh/prh
+
+version: 1
+
+rules:
+  # 表記ゆれの統一例 (長音の有無)
+  - expected: ユーザー
+    pattern:
+      - ユーザ
+  - expected: サーバー
+    pattern:
+      - サーバ
