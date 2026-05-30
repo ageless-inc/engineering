@@ -1,0 +1,8 @@
+site_name: Ageless Engineering
+
+theme:
+  name: material
+  language: ja
+
+extra:
+  generator: false
