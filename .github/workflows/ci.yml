@@ -22,10 +22,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      # 履歴を使うプラグインは未導入で、--strict のビルド検証に全履歴は不要なため浅いクローンで十分。
+      # git-revision-date-localized が最終更新日を正確に算出するには全履歴が必要なため
+      # fetch-depth: 0 でフルクローンする。--strict ビルドでも警告を出さないために CI 側にも必須。
       # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 0
 
       # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
