@@ -58,7 +58,8 @@ markdown_extensions:
       alternate_style: true
 
 copyright: >
-  Copyright &copy; 2026 株式会社エイジレス
+  Copyright &copy; 2026 株式会社エイジレス &middot;
+  本サイトは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> ライセンスのもとで提供されています
 
 extra:
   generator: false
