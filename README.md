@@ -48,6 +48,8 @@ uv lock
 
 ## デプロイ
 
-`production` ブランチへの push を契機に、[GitHub Actions](.github/workflows/deploy.yml) が自動でビルドし、GitHub Pages（`gh-pages` ブランチ）へ公開します。GitHub Actions タブから手動実行（`workflow_dispatch`）も可能です。
+`production` ブランチへの push を契機に、[GitHub Actions](.github/workflows/deploy.yml) が自動でビルドして公開します。ビルド成果物（`site/`）を Pages artifact としてアップロードし、`deploy-pages` で GitHub Pages へデプロイする方式（GitHub Pages の設定は「GitHub Actions」ソース）です。公開ブランチ（`gh-pages` など）への直接 push は行いません。GitHub Actions タブから手動実行（`workflow_dispatch`）も可能です。
+
+デプロイ履歴は GitHub の Deployments（`github-pages` 環境）に記録されます。
 
 通常の開発は `develop` ブランチで行い、公開する内容がまとまったら `production` へ反映してください。
