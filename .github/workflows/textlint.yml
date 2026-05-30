@@ -28,11 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
-      # Node をセットアップし npm キャッシュを有効化。バージョンは package-lock.json で固定済み。
+      # Node をセットアップし npm キャッシュを有効化。Node 版は .nvmrc を単一ソースとして
+      # 参照し (uv 側が .python-version を参照するのと対称)、CI とローカルのドリフトを防ぐ。
+      # 依存パッケージのバージョンは package-lock.json で固定済み。
       - name: Set up Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
         with:
-          node-version: "24"
+          node-version-file: .nvmrc
           cache: npm
 
       # package-lock.json どおりに依存をインストール (再現性のため install ではなく ci)
