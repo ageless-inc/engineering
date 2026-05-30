@@ -2,7 +2,7 @@
 
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) で構築する、株式会社エイジレスのエンジニアリングドキュメントサイトです。
 
-🌐 公開サイト: <https://ageless-inc.github.io/engineering/>
+🌐 公開サイト: <https://engineering.ageless.co.jp/>
 
 ## 必要環境
 

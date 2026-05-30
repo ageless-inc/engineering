@@ -1,6 +1,6 @@
 site_name: Ageless Engineering
 
-site_url: https://ageless-inc.github.io/engineering/
+site_url: https://engineering.ageless.co.jp/
 
 nav:
   - Introduction: index.md
