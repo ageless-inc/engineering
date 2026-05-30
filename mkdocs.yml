@@ -2,9 +2,6 @@ site_name: Ageless Engineering
 
 site_url: https://ageless-inc.github.io/engineering/
 
-repo_url: https://github.com/ageless-inc/engineering
-repo_name: ageless-inc/engineering
-
 nav:
   - Introduction: index.md
   - Vision: vision.md
@@ -57,5 +54,15 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
+copyright: >
+  Copyright &copy; 2026 株式会社エイジレス
+
 extra:
   generator: false
+  social:
+    - icon: fontawesome/solid/house
+      link: https://ageless.co.jp/
+      name: 会社概要
+    - icon: fontawesome/brands/github
+      link: https://github.com/ageless-inc/engineering
+      name: GitHub
