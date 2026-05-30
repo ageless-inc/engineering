@@ -1,5 +1,10 @@
 site_name: Ageless Engineering
 
+site_url: https://ageless-inc.github.io/engineering/
+
+repo_url: https://github.com/ageless-inc/engineering
+repo_name: ageless-inc/engineering
+
 nav:
   - Introduction: index.md
   - Vision: vision.md
@@ -7,6 +12,54 @@ nav:
 theme:
   name: material
   language: ja
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    # ライト/ダークをシステム設定 (prefers-color-scheme) に追従
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: ライト/ダークモードを切り替え
+    # ライトモード
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: ダークモードへ切り替え
+    # ダークモード
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: ライトモードへ切り替え
+
+plugins:
+  - search:
+      lang:
+        - ja
+        - en
+      # CJK (日本語) はクライアント側分割時にゼロ幅スペース (U+200B) が挿入されるため、
+      # separator に \u200b を含めて検索インデックスを分割する (Material 公式の日本語推奨)
+      separator: '[\s\u200b\-]'
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra:
   generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/header-title-link.js
