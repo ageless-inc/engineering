@@ -1,0 +1,14 @@
+{
+  "name": "ageless-engineering-textlint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "日本語ドキュメントの校正 (textlint) 用ツールチェーン。サイト本体は MkDocs (Python) で構築する。",
+  "scripts": {
+    "lint:text": "textlint \"docs/**/*.md\""
+  },
+  "license": "CC-BY-4.0",
+  "devDependencies": {
+    "textlint": "15.7.1",
+    "textlint-rule-prh": "6.1.0"
+  }
+}

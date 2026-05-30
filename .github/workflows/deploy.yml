@@ -8,38 +8,70 @@ on:
   # GitHub Actions タブから手動実行も可能にする
   workflow_dispatch:
 
-# gh-deploy が gh-pages ブランチへ push するため contents: write が必要
+# Pages Actions 方式 (artifact のアップロード + deploy-pages) では公開ブランチへ
+# 直接 push しないため contents: write は不要。GitHub Pages デプロイに必要な
+# 最小権限のみ付与する (最小権限の原則)。
 permissions:
-  contents: write
+  contents: read    # チェックアウトに必要
+  pages: write      # GitHub Pages へのデプロイ
+  id-token: write   # deploy-pages の OIDC 検証用
 
 # デプロイの同時実行を抑止する。進行中のデプロイは中断せず順番に流しきる
-# (gh-pages への push を途中でキャンセルすると中途半端な状態になりうるため false)
+# (公開処理を途中でキャンセルすると中途半端な状態になりうるため false)
 concurrency:
   group: deploy-mkdocs
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  # サイトをビルドし、生成物 (site/) を Pages artifact としてアップロードする
+  build:
+    # ランナー世代の自動切替によるビルド差異を避けるためメジャー版を固定 (latest は 24.04 を指す)
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      # 最終更新日プラグイン等で git 履歴が必要になっても困らないよう全履歴を取得
+      # git-revision-date-localized が最終更新日を正確に算出するには全履歴が必要なため
+      # fetch-depth: 0 でフルクローンする (公開物を生成するのはこの deploy 側)。
+      # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           fetch-depth: 0
 
-      # 公式 astral-sh/setup-uv で uv をセットアップ。
-      # このアクションはマイナータグ (@v8) を発行していないため固定タグで pin する。
+      # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
+          # Action の SHA だけでなくインストールされる uv 本体のバージョンも固定し、
+          # 再現性を担保する。Dependabot は version: を更新しないため bump は手動。
+          version: "0.11.17"
           enable-cache: true
 
       # uv.lock どおりに依存をインストール
       - name: Install dependencies
         run: uv sync --frozen
 
-      # ビルドと gh-pages への デプロイを一括実行
-      - name: Build and deploy to GitHub Pages
-        run: uv run --frozen mkdocs gh-deploy --force
+      # production への直 push は PR の CI を経由しないため、ここでも --strict で
+      # リンク切れ・設定ミスを検証し、不正な内容を本番公開しないようにする。
+      - name: Build (strict)
+        run: uv run --frozen mkdocs build --strict
+
+      # 生成物 (mkdocs の出力先は site/) を Pages artifact としてアップロードする。
+      # 既定のパスは _site のため、明示的に site を指定する。
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: site
+
+  # アップロード済み artifact を GitHub Pages へデプロイする。
+  # デプロイ履歴は GitHub の Deployments/Environments (github-pages) に残る。
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0

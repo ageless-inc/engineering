@@ -1,0 +1,44 @@
+name: textlint
+
+# develop / production への PR で日本語ドキュメントを校正し、表記ゆれや
+# である/ですます混在をマージ前に機械チェックして品質を保つ。
+on:
+  pull_request:
+    branches:
+      - develop
+      - production
+
+# 校正のみなので read 権限で十分
+permissions:
+  contents: read
+
+# 同一 PR への連続 push では古い検証をキャンセルしてよい
+concurrency:
+  group: textlint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  textlint:
+    # ランナー世代の自動切替による差異を避けるためメジャー版を固定 (latest は 24.04 を指す)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # 校正対象は作業ツリーのファイルのみで git 履歴は不要なため浅いクローンで十分。
+      # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      # Node をセットアップし npm キャッシュを有効化。バージョンは package-lock.json で固定済み。
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      # package-lock.json どおりに依存をインストール (再現性のため install ではなく ci)
+      - name: Install dependencies
+        run: npm ci
+
+      # docs 配下の Markdown を textlint で校正
+      - name: Run textlint
+        run: npm run lint:text

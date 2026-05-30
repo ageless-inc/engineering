@@ -18,19 +18,25 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # ランナー世代の自動切替によるビルド差異を避けるためメジャー版を固定 (latest は 24.04 を指す)
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      # git-revision-date 系プラグインが履歴を要求しても困らないよう全履歴を取得
+      # git-revision-date-localized が最終更新日を正確に算出するには全履歴が必要なため
+      # fetch-depth: 0 でフルクローンする。--strict ビルドでも警告を出さないために CI 側にも必須。
+      # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           fetch-depth: 0
 
-      # 公式 astral-sh/setup-uv で uv をセットアップ。マイナータグ未発行のため固定タグで pin する。
+      # 公式 astral-sh/setup-uv で uv をセットアップ。SHA で pin (理由は上の Checkout と同じ)。
       - name: Set up uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
+          # Action の SHA だけでなくインストールされる uv 本体のバージョンも固定し、
+          # 再現性を担保する。Dependabot は version: を更新しないため bump は手動。
+          version: "0.11.17"
           enable-cache: true
 
       # uv.lock どおりに依存をインストール

@@ -7,6 +7,24 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "deps"
+    # 毎週バラバラに PR が来る運用負荷を抑えるため、Python 依存はまとめて 1 PR にする
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  # textlint (日本語校正) の npm 依存を毎週チェックして更新 PR を作成
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    # npm 依存もまとめて 1 PR にする
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
 
   # GitHub Actions のバージョンを毎週チェックして更新 PR を作成
   - package-ecosystem: "github-actions"
@@ -15,3 +33,8 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci"
+    # Actions の SHA 更新もまとめて 1 PR にする
+    groups:
+      github-actions:
+        patterns:
+          - "*"
