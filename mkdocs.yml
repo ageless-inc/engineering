@@ -12,6 +12,8 @@ nav:
 theme:
   name: material
   language: ja
+  logo: assets/logo.png
+  favicon: assets/logo.png
   features:
     - navigation.sections
     - navigation.top
@@ -57,10 +59,3 @@ markdown_extensions:
 
 extra:
   generator: false
-
-extra_css:
-  - stylesheets/extra.css
-
-extra_javascript:
-  - javascripts/header-title-link.js
-  - javascripts/sidebar-repo-link.js
