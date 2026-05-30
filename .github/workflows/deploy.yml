@@ -1,0 +1,43 @@
+name: Deploy MkDocs site
+
+on:
+  # production への push で本番サイトへ自動デプロイ
+  push:
+    branches:
+      - production
+  # GitHub Actions タブから手動実行も可能にする
+  workflow_dispatch:
+
+# gh-deploy が gh-pages ブランチへ push するため contents: write が必要
+permissions:
+  contents: write
+
+# デプロイの同時実行を抑止する (新しい実行が走ったら進行中の古い実行はキャンセル)
+concurrency:
+  group: deploy-mkdocs
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 最終更新日プラグイン等で git 履歴が必要になっても困らないよう全履歴を取得
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 公式 astral-sh/setup-uv で uv をセットアップ。
+      # このアクションはマイナータグ (@v8) を発行していないため固定タグで pin する。
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+
+      # uv.lock どおりに依存をインストール
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # ビルドと gh-pages への デプロイを一括実行
+      - name: Build and deploy to GitHub Pages
+        run: uv run --frozen mkdocs gh-deploy --force
