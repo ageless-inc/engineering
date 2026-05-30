@@ -4,5 +4,8 @@
 # MkDocs build output
 site/
 
+# Node.js (textlint ツールチェーン)
+node_modules/
+
 # Claude Code local settings
 .claude/settings.local.json

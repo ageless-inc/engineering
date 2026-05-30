@@ -13,6 +13,19 @@ updates:
         patterns:
           - "*"
 
+  # textlint (日本語校正) の npm 依存を毎週チェックして更新 PR を作成
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    # npm 依存もまとめて 1 PR にする
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
   # GitHub Actions のバージョンを毎週チェックして更新 PR を作成
   - package-ecosystem: "github-actions"
     directory: "/"
