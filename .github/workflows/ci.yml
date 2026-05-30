@@ -23,7 +23,7 @@ jobs:
     steps:
       # git-revision-date 系プラグインが履歴を要求しても困らないよう全履歴を取得
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
