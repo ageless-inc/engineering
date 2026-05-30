@@ -31,6 +31,9 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
+          # Action の SHA だけでなくインストールされる uv 本体のバージョンも固定し、
+          # 再現性を担保する。Dependabot は version: を更新しないため bump は手動。
+          version: "0.11.17"
           enable-cache: true
 
       # uv.lock どおりに依存をインストール
