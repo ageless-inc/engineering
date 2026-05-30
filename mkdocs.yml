@@ -1,5 +1,9 @@
 site_name: Ageless Engineering
 
+nav:
+  - Introduction: index.md
+  - Vision: vision.md
+
 theme:
   name: material
   language: ja
