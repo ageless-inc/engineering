@@ -26,7 +26,7 @@ jobs:
       # 校正対象は作業ツリーのファイルのみで git 履歴は不要なため浅いクローンで十分。
       # 以降の Action はサプライチェーン保護のため SHA で pin する (Dependabot が SHA とコメントを自動更新)。
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
 
       # Node をセットアップし npm キャッシュを有効化。Node 版は .nvmrc を単一ソースとして
       # 参照し (uv 側が .python-version を参照するのと対称)、CI とローカルのドリフトを防ぐ。
