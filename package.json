@@ -8,7 +8,7 @@
   },
   "license": "CC-BY-4.0",
   "devDependencies": {
-    "textlint": "15.7.1",
+    "textlint": "15.8.0",
     "textlint-rule-prh": "6.1.0"
   }
 }
